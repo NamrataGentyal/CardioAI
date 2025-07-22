@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heart Failure Prediction</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: white;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            width: 500px;
+            margin: auto;
+            background-color: #eedfdf;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+
+        input{
+            width: 80%;
+            padding: 10px 5px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+        }
+
+        button{
+            background-color: rgb(72, 118, 245);
+            color: white;
+            padding: 15px 100px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 200px;
+            margin-right: 200px;
+        }
+        .result {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 30px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Heart Failure Prediction</h1>
+    <form method="POST" action="/predict">
+  <input type="text" name="age" placeholder="Age" required>
+  <input type="text" name="anaemia" placeholder="Anaemia (0 or 1)" required>
+  <input type="text" name="creatinine_phosphokinase" placeholder="CPK level" required>
+  <input type="text" name="diabetes" placeholder="Diabetes (0 or 1)" required>
+  <input type="text" name="ejection_fraction" placeholder="Ejection Fraction" required>
+  <input type="text" name="high_blood_pressure" placeholder="High BP (0 or 1)" required>
+  <input type="text" name="platelets" placeholder="Platelets count" required>
+  <input type="text" name="serum_creatinine" placeholder="Serum Creatinine" required>
+  <input type="text" name="serum_sodium" placeholder="Serum Sodium" required>
+  <input type="text" name="sex" placeholder="Sex (0=female, 1=male)" required>
+  <input type="text" name="smoking" placeholder="Smoking (0 or 1)" required>
+  <input type="text" name="time" placeholder="Follow-up period" required>
+  <button type="submit">Predict</button>
+</form>
+
+    {% if result %}
+    <div class="result">
+        <h2 id="predi">Prediction: {{ result }}</h2>
+    </div>
+    {% endif %}
+</body>
+</html>
