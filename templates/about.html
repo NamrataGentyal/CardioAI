@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About - Heart Failure AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}" />
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="/">&#10084; Cardio<span>AI</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/predictor">Predictor</a></li>
+    <li><a href="/about" class="active">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <li><a href="/login">Login</a></li>
+    <li><a href="/signup" class="btn-nav">Sign Up</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="badge">&#128203; About the Project</div>
+  <h1>About <span>CardioAI</span></h1>
+  <p>A machine learning web app built to predict heart failure mortality risk from clinical patient data, designed to assist in early medical decision-making.</p>
+</div>
+
+<div class="container">
+
+  <div class="section-grid">
+    <div class="card">
+      <h3>&#128161; Project Overview</h3>
+      <p>CardioAI is a Flask-based web application that leverages supervised ML models trained on the Heart Failure Clinical Records dataset. It predicts whether a patient is at risk of a death event within a clinical follow-up period based on 12 clinical features.</p>
+      <p style="margin-top:12px;">The application accepts patient data through a clean UI, validates all inputs, and returns a colour-coded risk result with a probability confidence score.</p>
+    </div>
+    <div class="card">
+      <h3>&#128202; Dataset</h3>
+      <ul>
+        <li>299 patient records collected from hospital follow-ups</li>
+        <li>12 clinical features per patient</li>
+        <li>Binary classification target: DEATH_EVENT (0 or 1)</li>
+        <li>Features include ejection fraction, serum creatinine, serum sodium, CPK, platelets, age, anaemia, diabetes, hypertension, sex, smoking, and follow-up time</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:24px;">&#9881; ML Pipeline</h2>
+  <div class="pipeline-steps" style="margin-bottom:60px;">
+    <div class="step"><div class="num">01</div><h4>Data Loading</h4><p>CSV loaded with pandas, features extracted and validated.</p></div>
+    <div class="step"><div class="num">02</div><h4>Train / Test Split</h4><p>80/20 stratified split to preserve class balance.</p></div>
+    <div class="step"><div class="num">03</div><h4>Scaling</h4><p>StandardScaler normalises all features to zero mean and unit variance.</p></div>
+    <div class="step"><div class="num">04</div><h4>Grid Search</h4><p>5-fold CV GridSearchCV on Random Forest optimising ROC-AUC.</p></div>
+    <div class="step"><div class="num">05</div><h4>Model Selection</h4><p>Best model chosen across RF, GB, LR, and SVM by ROC-AUC score.</p></div>
+    <div class="step"><div class="num">06</div><h4>Artifacts</h4><p>model.pkl, scaler.pkl, and model_stats.json persisted for the web app.</p></div>
+  </div>
+
+  <div class="section-grid">
+    <div class="card">
+      <h3>&#128296; Tech Stack</h3>
+      <div class="tech-row">
+        <span class="tech-pill">Python 3</span>
+        <span class="tech-pill">Flask</span>
+        <span class="tech-pill">Scikit-learn</span>
+        <span class="tech-pill">Pandas</span>
+        <span class="tech-pill">NumPy</span>
+        <span class="tech-pill">Chart.js</span>
+        <span class="tech-pill">HTML / CSS</span>
+        <span class="tech-pill">GridSearchCV</span>
+        <span class="tech-pill">Random Forest</span>
+        <span class="tech-pill">Gradient Boosting</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>&#127775; Key Features</h3>
+      <ul>
+        <li>Multi-model training and automatic best-model selection</li>
+        <li>Server-side input validation with range checks</li>
+        <li>Probability-based confidence score with animated meter</li>
+        <li>Feature importance bar chart (Chart.js)</li>
+        <li>Model comparison table</li>
+        <li>Session-based authentication and route protection</li>
+        <li>REST JSON API endpoint (<code style="color:var(--accent)">/api/predict</code>)</li>
+        <li>Health check endpoint (<code style="color:var(--accent)">/health</code>)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="team-section" style="margin-top:60px;">
+    <h2>&#128100; Built by</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">&#129489;</div>
+        <h4>Namrata</h4>
+        <p>ML Engineer &amp; Full-Stack Developer</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>&copy; 2026 CardioAI &nbsp;|&nbsp; <a href="/contact">Contact Us</a></footer>
+</body>
+</html>

@@ -1,74 +1,228 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Heart Failure Prediction</title>
-    <style>
-        body {
-            text-align: center;
-            background-color: white;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        form {
-            width: 500px;
-            margin: auto;
-            background-color: #eedfdf;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px gray;
-        }
-
-        input{
-            width: 80%;
-            padding: 10px 5px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-        }
-
-        button{
-            background-color: rgb(72, 118, 245);
-            color: white;
-            padding: 15px 100px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin-left: 200px;
-            margin-right: 200px;
-        }
-        .result {
-            text-align: center;
-            font-size: 20px;
-            margin-top: 30px;
-            color: #333;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predictor - Heart Failure AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/predictor.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <h1>Heart Failure Prediction</h1>
-    <form method="POST" action="/predict">
-  <input type="text" name="age" placeholder="Age" required>
-  <input type="text" name="anaemia" placeholder="Anaemia (0 or 1)" required>
-  <input type="text" name="creatinine_phosphokinase" placeholder="CPK level" required>
-  <input type="text" name="diabetes" placeholder="Diabetes (0 or 1)" required>
-  <input type="text" name="ejection_fraction" placeholder="Ejection Fraction" required>
-  <input type="text" name="high_blood_pressure" placeholder="High BP (0 or 1)" required>
-  <input type="text" name="platelets" placeholder="Platelets count" required>
-  <input type="text" name="serum_creatinine" placeholder="Serum Creatinine" required>
-  <input type="text" name="serum_sodium" placeholder="Serum Sodium" required>
-  <input type="text" name="sex" placeholder="Sex (0=female, 1=male)" required>
-  <input type="text" name="smoking" placeholder="Smoking (0 or 1)" required>
-  <input type="text" name="time" placeholder="Follow-up period" required>
-  <button type="submit">Predict</button>
-</form>
 
-    {% if result %}
-    <div class="result">
-        <h2 id="predi">Prediction: {{ result }}</h2>
+<!-- Navbar -->
+<nav>
+  <a class="nav-brand" href="/">&#10084; Cardio<span>AI</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/predictor" class="active">Predictor</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    {% if username %}
+    <li><span class="nav-user">&#128100; {{ username }}</span></li>
+    <li><a href="/logout" class="btn-logout">Logout</a></li>
+    {% else %}
+    <li><a href="/login">Login</a></li>
+    <li><a href="/signup" class="btn-nav">Sign Up</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<div class="page">
+  <div class="center-wrap">
+
+    <!-- Page title -->
+    <div class="page-title">
+      <div class="badge">&#10084; Cardiology AI</div>
+      <h1>Heart Failure <span>Risk Predictor</span></h1>
+      <p>Enter patient clinical parameters below to assess heart failure mortality risk.</p>
+    </div>
+
+    <!-- Stats bar -->
+    {% if stats %}
+    <div class="stats-bar">
+      <div class="stat-card"><div class="val">{{ stats.total_samples }}</div><div class="lbl">Patients</div></div>
+      <div class="stat-card"><div class="val">{{ (stats.model_comparison[stats.best_model].accuracy * 100) | round(1) }}%</div><div class="lbl">Accuracy</div></div>
+      <div class="stat-card"><div class="val">{{ (stats.model_comparison[stats.best_model].roc_auc * 100) | round(1) }}%</div><div class="lbl">ROC-AUC</div></div>
+      <div class="stat-card"><div class="val">{{ (stats.model_comparison[stats.best_model].f1_score * 100) | round(1) }}%</div><div class="lbl">F1 Score</div></div>
+      <div class="stat-card"><div class="val">{{ stats.best_model.split()[0] }}</div><div class="lbl">Best Model</div></div>
     </div>
     {% endif %}
+
+    <!-- Error -->
+    {% if error %}<div class="banner-error">&#9888; {{ error }}</div>{% endif %}
+
+    <!-- Form card -->
+    <div class="card">
+      <h2>&#128203; Patient Parameters</h2>
+      <form method="POST" action="/predict">
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Age</label>
+            <input type="number" name="age" placeholder="e.g. 65" min="1" max="120" step="0.1"
+                   value="{{ form_data.age if form_data else '' }}" required />
+            <span class="hint">Patient age in years (1 - 120)</span>
+          </div>
+
+          <div class="field">
+            <label>Sex</label>
+            <select name="sex" required>
+              <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+              <option value="0" {% if form_data and form_data.sex == '0' %}selected{% endif %}>Female (0)</option>
+              <option value="1" {% if form_data and form_data.sex == '1' %}selected{% endif %}>Male (1)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Ejection Fraction (%)</label>
+            <input type="number" name="ejection_fraction" placeholder="e.g. 38" min="1" max="100"
+                   value="{{ form_data.ejection_fraction if form_data else '' }}" required />
+            <span class="hint">Blood pumped out per beat (1 - 100)</span>
+          </div>
+
+          <div class="field">
+            <label>Serum Creatinine (mg/dL)</label>
+            <input type="number" name="serum_creatinine" placeholder="e.g. 1.1" min="0.1" max="20" step="0.1"
+                   value="{{ form_data.serum_creatinine if form_data else '' }}" required />
+            <span class="hint">Blood creatinine level (0.1 - 20)</span>
+          </div>
+
+          <div class="field">
+            <label>Serum Sodium (mEq/L)</label>
+            <input type="number" name="serum_sodium" placeholder="e.g. 136" min="100" max="150"
+                   value="{{ form_data.serum_sodium if form_data else '' }}" required />
+            <span class="hint">Blood sodium level (100 - 150)</span>
+          </div>
+
+          <div class="field">
+            <label>CPK Level (mcg/L)</label>
+            <input type="number" name="creatinine_phosphokinase" placeholder="e.g. 582" min="1" max="8000"
+                   value="{{ form_data.creatinine_phosphokinase if form_data else '' }}" required />
+            <span class="hint">Creatinine phosphokinase enzyme (1 - 8000)</span>
+          </div>
+
+          <div class="field">
+            <label>Platelets (kiloplatelets/mL)</label>
+            <input type="number" name="platelets" placeholder="e.g. 263000" min="1" max="900000"
+                   value="{{ form_data.platelets if form_data else '' }}" required />
+            <span class="hint">Platelet count (1 - 900,000)</span>
+          </div>
+
+          <div class="field">
+            <label>Follow-up Period (days)</label>
+            <input type="number" name="time" placeholder="e.g. 130" min="1" max="365"
+                   value="{{ form_data.time if form_data else '' }}" required />
+            <span class="hint">Clinical follow-up window (1 - 365)</span>
+          </div>
+
+          <div class="field">
+            <label>Anaemia</label>
+            <select name="anaemia" required>
+              <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+              <option value="0" {% if form_data and form_data.anaemia == '0' %}selected{% endif %}>No (0)</option>
+              <option value="1" {% if form_data and form_data.anaemia == '1' %}selected{% endif %}>Yes (1)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Diabetes</label>
+            <select name="diabetes" required>
+              <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+              <option value="0" {% if form_data and form_data.diabetes == '0' %}selected{% endif %}>No (0)</option>
+              <option value="1" {% if form_data and form_data.diabetes == '1' %}selected{% endif %}>Yes (1)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>High Blood Pressure</label>
+            <select name="high_blood_pressure" required>
+              <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+              <option value="0" {% if form_data and form_data.high_blood_pressure == '0' %}selected{% endif %}>No (0)</option>
+              <option value="1" {% if form_data and form_data.high_blood_pressure == '1' %}selected{% endif %}>Yes (1)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Smoking</label>
+            <select name="smoking" required>
+              <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+              <option value="0" {% if form_data and form_data.smoking == '0' %}selected{% endif %}>No (0)</option>
+              <option value="1" {% if form_data and form_data.smoking == '1' %}selected{% endif %}>Yes (1)</option>
+            </select>
+          </div>
+
+        </div>
+        <button class="btn-predict" type="submit">&#128203; Run Prediction</button>
+      </form>
+    </div>
+
+    <!-- Result -->
+    {% if result %}
+    <div class="result-card {{ result_class }}">
+      <div class="result-title">
+        {% if result_class == 'danger' %}&#9888;{% else %}&#10004;{% endif %}
+        {{ result }}
+      </div>
+      <div class="result-advice">{{ advice }}</div>
+      <div class="conf-label"><span>Risk Probability</span><span><strong>{{ confidence }}%</strong></span></div>
+      <div class="conf-track"><div class="conf-fill" id="confBar" style="width:0%"></div></div>
+    </div>
+    <script>setTimeout(() => { document.getElementById('confBar').style.width = '{{ confidence }}%'; }, 100);</script>
+    {% endif %}
+
+    <!-- Bottom info panels -->
+    {% if stats %}
+    <div class="bottom-grid">
+      {% if stats.feature_importance %}
+      <div class="card">
+        <h2>&#128200; Feature Importance</h2>
+        <canvas id="featureChart"></canvas>
+      </div>
+      {% endif %}
+      {% if stats.model_comparison %}
+      <div class="card">
+        <h2>&#129302; Model Comparison</h2>
+        <table class="model-table">
+          <thead><tr><th>Model</th><th>AUC</th><th>Acc</th></tr></thead>
+          <tbody>
+            {% for name, m in stats.model_comparison.items() %}
+            <tr {% if name == stats.best_model %}class="best-row"{% endif %}>
+              <td>{{ name.split()[0] }} {% if name == stats.best_model %}<span class="pill pill-blue">best</span>{% endif %}</td>
+              <td>{{ (m.roc_auc * 100) | round(1) }}%</td>
+              <td>{{ (m.accuracy * 100) | round(1) }}%</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% if stats and stats.feature_importance %}
+<script>
+  const labels = {{ stats.feature_importance.keys() | list | tojson }};
+  const values = {{ stats.feature_importance.values() | list | tojson }};
+  const colors = values.map(v => v > 0.15 ? '#4f8ef7' : v > 0.08 ? '#818cf8' : '#475569');
+  new Chart(document.getElementById('featureChart'), {
+    type: 'bar',
+    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderRadius: 4 }] },
+    options: {
+      indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#8892a4', font: { size: 9 } }, grid: { color: '#1e2136' } },
+        y: { ticks: { color: '#8892a4', font: { size: 9 } }, grid: { display: false } }
+      }
+    }
+  });
+</script>
+{% endif %}
+
 </body>
 </html>

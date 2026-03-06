@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact - Heart Failure AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}" />
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="/">&#10084; Cardio<span>AI</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/predictor">Predictor</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact" class="active">Contact</a></li>
+    <li><a href="/login">Login</a></li>
+    <li><a href="/signup" class="btn-nav">Sign Up</a></li>
+  </ul>
+</nav>
+<div class="page-hero">
+  <div class="badge">&#128231; Get in Touch</div>
+  <h1>Contact <span>Us</span></h1>
+  <p>Have a question, feedback, or want to collaborate? We would love to hear from you.</p>
+</div>
+<div class="container">
+  <div class="contact-grid">
+    <div class="card">
+      <h2>&#128231; Send a Message</h2>
+      {% if success %}
+      <div class="success-banner">&#10004; Your message was sent successfully! We will get back to you soon.</div>
+      {% endif %}
+      <form method="POST" action="/contact">
+        <div class="field"><label>Full Name</label><input type="text" name="name" placeholder="John Doe" required /></div>
+        <div class="field"><label>Email Address</label><input type="email" name="email" placeholder="john@example.com" required /></div>
+        <div class="field"><label>Subject</label><input type="text" name="subject" placeholder="e.g. Feature request" required /></div>
+        <div class="field"><label>Message</label><textarea name="message" placeholder="Write your message here..." required></textarea></div>
+        <button type="submit" class="btn-submit">&#9993; Send Message</button>
+      </form>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div class="card">
+        <h2>&#128205; Contact Info</h2>
+        <div class="info-item"><div class="info-icon">&#128231;</div><div><h4>Email</h4><p>cardioai@example.com</p></div></div>
+        <div class="info-item"><div class="info-icon">&#127758;</div><div><h4>Project Repository</h4><p>Available on GitHub upon request</p></div></div>
+        <div class="info-item"><div class="info-icon">&#128204;</div><div><h4>Location</h4><p>India</p></div></div>
+      </div>
+      <div class="card">
+        <h2>&#128214; Quick Links</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="/login" style="color:var(--accent);font-size:.88rem;text-decoration:none;">&#128274; Login to Predictor</a>
+          <a href="/about" style="color:var(--accent);font-size:.88rem;text-decoration:none;">&#128161; About the Project</a>
+          <a href="/stats" style="color:var(--accent);font-size:.88rem;text-decoration:none;">&#128200; Model Stats (JSON)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>&copy; 2026 CardioAI &nbsp;|&nbsp; <a href="/about">About</a></footer>
+</body>
+</html>

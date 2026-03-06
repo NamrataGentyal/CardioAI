@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home - Heart Failure AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="/">&#10084; Cardio<span>AI</span></a>
+  <ul class="nav-links">
+    <li><a href="/" class="active">Home</a></li>
+    <li><a href="/predictor">Predictor</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <li><a href="/login">Login</a></li>
+    <li><a href="/signup" class="btn-nav">Sign Up</a></li>
+  </ul>
+</nav>
+<section class="hero">
+  <div class="hero-badge">&#10084; AI-Powered Cardiology</div>
+  <h1>Predict Heart Failure Risk<br/>with <span>Machine Learning</span></h1>
+  <p>Enter patient clinical parameters and get an instant mortality risk assessment powered by a trained Random Forest model with over 85% accuracy.</p>
+  <div class="hero-buttons">
+    <a href="/signup" class="btn-primary">&#128203; Create Free Account</a>
+    <a href="/about" class="btn-outline">Learn More</a>
+  </div>
+  <div class="stats-row">
+    <div class="s"><div class="v">299</div><div class="l">Patients Trained</div></div>
+    <div class="s"><div class="v">85%+</div><div class="l">Accuracy</div></div>
+    <div class="s"><div class="v">12</div><div class="l">Clinical Features</div></div>
+    <div class="s"><div class="v">4</div><div class="l">Models Compared</div></div>
+  </div>
+</section>
+<section class="features-section">
+  <div class="section-label">Why CardioAI?</div>
+  <div class="section-title">Built for Clinical Intelligence</div>
+  <div class="features-grid">
+    <div class="feat-card"><div class="feat-icon">&#129302;</div><h3>Multi-Model Comparison</h3><p>Compares Random Forest, Gradient Boosting, SVM, and Logistic Regression - selecting the best by ROC-AUC.</p></div>
+    <div class="feat-card"><div class="feat-icon">&#128200;</div><h3>Feature Importance</h3><p>Visualizes which clinical factors - ejection fraction, serum creatinine, time - drive the prediction.</p></div>
+    <div class="feat-card"><div class="feat-icon">&#128203;</div><h3>Validated Input</h3><p>Every field is range-validated against clinical norms ensuring reliable, error-free results.</p></div>
+    <div class="feat-card"><div class="feat-icon">&#128161;</div><h3>Confidence Score</h3><p>Returns the probability estimate alongside the prediction so clinicians can assess risk severity.</p></div>
+    <div class="feat-card"><div class="feat-icon">&#128279;</div><h3>REST API</h3><p>JSON endpoint at <code style="color:var(--accent)">/api/predict</code> for integration with external systems.</p></div>
+    <div class="feat-card"><div class="feat-icon">&#128274;</div><h3>Secure Access</h3><p>Session-based authentication ensures only authorized users can access the predictor dashboard.</p></div>
+  </div>
+</section>
+<section class="cta-section">
+  <h2>Ready to assess heart failure risk?</h2>
+  <p>Login to access the AI-powered predictor and get results in seconds.</p>
+  <a href="/signup" class="btn-primary">&#128274; Create Free Account</a>
+</section>
+<footer>&copy; 2026 CardioAI &nbsp;|&nbsp; Built with Flask &amp; Scikit-learn &nbsp;|&nbsp; <a href="/about">About</a> &nbsp;&middot;&nbsp; <a href="/contact">Contact</a></footer>
+</body>
+</html>

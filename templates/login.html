@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Heart Failure AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="/">&#10084; Cardio<span>AI</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <li><a href="/login" class="btn-nav active">Login</a></li>
+    <li><a href="/signup">Sign Up</a></li>
+  </ul>
+</nav>
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="icon">&#128274;</div>
+      <h1>Welcome back</h1>
+      <p>Sign in to access the CardioAI predictor</p>
+    </div>
+    <div class="divider"></div>
+    {% if error %}
+    <div class="error-banner">&#9888; {{ error }}</div>
+    {% endif %}
+    <form method="POST" action="/login">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Enter username" required autofocus />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" required />
+      </div>
+      <button type="submit" class="btn-login">&#128274; Sign In</button>
+    </form>
+
+    <div class="auth-switch">
+      Don't have an account? <a href="/signup">Sign up</a>
+    </div>
+    <div class="back-link" style="margin-top:12px;">
+      <a href="/">&#8592; Back to Home</a>
+    </div>
+  </div>
+</div>
+<footer>&copy; 2026 CardioAI &nbsp;|&nbsp; <a href="/contact">Contact</a></footer>
+</body>
+</html>
