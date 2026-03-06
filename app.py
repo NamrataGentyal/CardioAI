@@ -6,16 +6,19 @@ import pickle
 import json
 import os
 import re
+from dotenv import load_dotenv
+
+load_dotenv()  # loads .env file when running locally
 
 app = Flask(__name__)
-app.secret_key = 'cardioai_mysql_v2_2026_zQ5nJ8wX'   # changed → clears all old sessions
+app.secret_key = os.environ.get('SECRET_KEY', 'cardioai_mysql_v2_2026_zQ5nJ8wX')
 
 # ── MySQL connection ─────────────────────────────────────────────────────────
 DB_CONFIG = {
-    'host':     'localhost',
-    'user':     'root',          # change if your MySQL user is different
-    'password': 'Namrata@23', # ← replace with your MySQL root password
-    'database': 'cardioai',
+    'host':     os.environ.get('DB_HOST', 'localhost'),
+    'user':     os.environ.get('DB_USER', 'root'),
+    'password': os.environ.get('DB_PASSWORD', ''),
+    'database': os.environ.get('DB_NAME', 'cardioai'),
 }
 
 def get_db():
